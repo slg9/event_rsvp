@@ -10,6 +10,14 @@ export async function GetEvent(id: string) {
     `
     return data.rows;
 }
+export async function GetEventByCode(code: string) {
+    const data = await sql<Event>`
+    SELECT * FROM events
+    WHERE code = ${code}
+    LIMIT 1
+    `
+    return data.rows;
+}
 export async function ListEvents(id?: string,date?:string,query?:string) {
     const data = await sql<Event>`
     SELECT * FROM events
