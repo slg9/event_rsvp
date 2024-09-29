@@ -9,6 +9,7 @@ export type Event = {
     start: string;
     end: string;
     code: string;
+    canva_url?:string;
 }
 
 export type Question = {

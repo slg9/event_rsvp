@@ -23,7 +23,8 @@ CREATE TABLE "events"(
     "name" text NOT NULL,
     "start" date NOT NULL,
     "end" date NOT NULL,
-    "code" text NOT NULL 
+    "code" text NOT NULL,
+    "canva_url" text
 );
 
 CREATE TABLE "questions"(
