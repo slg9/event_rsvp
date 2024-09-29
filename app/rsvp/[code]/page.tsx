@@ -1,7 +1,7 @@
 import { GetEventByCode } from "@/app/db/queries/events"
 import styles from './rsvp.module.css'
 
-export async function page({ params }: { params: { code: string } }) {
+export default async function Home({ params }: { params: { code: string } }) {
 
   const event = await GetEventByCode(params.code)
   if (event.length===0 || (event.length>0 && !event[0].canva_url)){
@@ -15,4 +15,3 @@ export async function page({ params }: { params: { code: string } }) {
     </div>)
 }
 
-export default page
