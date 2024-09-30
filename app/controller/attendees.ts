@@ -190,6 +190,7 @@ export async function UpdateAttendeeController(formdata: FormData, code: string,
                 .then((response) => console.log('Mail Sent:', response))
                 .catch((error) => console.error('Error:', error));
 
+                
             /* const inputSMS: InputSMS = {
                 recipient: `${attendee[0].phone_prefix}${attendee[0].phone}`,
                 content: `Salut! ${attendee[0].firstname} ${attendee[0].lastname}. On se voit le ${moment(attendee[0].arrival).format("DD-MMM")}. A bientot :)`,
