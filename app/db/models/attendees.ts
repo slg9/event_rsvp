@@ -5,6 +5,7 @@ export type Attendee = {
     firstname: string; 
     lastname: string;
     email: string;
+    attending:'oui | non '
     phone: number;
     phone_prefix: number;
     adults?:number;

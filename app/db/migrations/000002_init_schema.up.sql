@@ -1,4 +1,5 @@
 CREATE TYPE "role" AS ENUM ('ADMIN', 'USER');
+CREATE TYPE "attending_types" AS ENUM ('oui', 'non');
 CREATE TYPE "answer_types" AS ENUM ('STRING' , 'STRING[]' , 'NUMBER' , 'NUMBER[] ', 'BOOLEAN');
 
 CREATE TABLE "users"(
@@ -52,7 +53,8 @@ CREATE TABLE "attendees"(
     "adults" int ,
     "arrival" timestamp,
     "departure" timestamp,
-    "comment" text
+    "comment" text,
+    "attending" attending_types NOT NULL
 );
 
 CREATE TABLE "answers"(
