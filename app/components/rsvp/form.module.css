@@ -153,9 +153,13 @@
 
 .phone-prefix {
     position: absolute;
-    top: 14px; /* Ajuste cette valeur pour la hauteur du champ */
-    left: 2px;
-    z-index: 1;
+    top: 10px; /* Ajuste cette valeur pour la hauteur du champ */
+    left: 0px;
+    z-index: 2;
+    height:47px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Assurer que le champ téléphone est en-dessous */
