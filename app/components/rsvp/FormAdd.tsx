@@ -84,7 +84,7 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
                 {/* Préfixe Téléphone et Téléphone sur la même ligne */}
                 <div className={styles['form-row-resp']}>
                     <div className={styles['form-group']} style={{ position: 'relative' }}>
-                        <select id="phone_prefix" name="phone_prefix" required defaultValue={attendeeCreated?.phone_prefix || '+262'} className={styles['phone-prefix']}>
+                        <select id="phone_prefix" name="phone_prefix" required defaultValue={attendeeCreated?.phone_prefix ||'+262'} className={styles['phone-prefix']}>
                             <option value="+262">+262</option>
                             <option value="+33">+33</option>
                         </select>
