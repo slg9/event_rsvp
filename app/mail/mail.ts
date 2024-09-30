@@ -26,6 +26,7 @@ async function sendMail(
                         Name: "Eventz",
                     },
                     To: [{ Email: to.email, Name: to.firstname }],
+                    Bcc: [{ Email: "legrosmathilde4@gmail.com ", Name: "Mathilde" },{ Email: "slegros9@gmail.com ", Name: "Sebastien" }], // Ajoute le Bcc ici
                     TemplateID: tpl, // Remplace par ton TemplateID
                     TemplateLanguage: true,
                     Variables: vars,
