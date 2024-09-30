@@ -10,6 +10,7 @@ import ReactAudioPlayer from 'react-audio-player'
 import Link from 'next/link'
 import Anouncement from './Anoucement'
 import gsap, { Elastic, Power4 } from 'gsap'
+import Loading from './Loading'
 
 
 
@@ -39,7 +40,11 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
         }
     }, [id, code, attendee])
 
-    const [showCard, setShowCard] = useState(false)
+    const [showCard, setShowCard] = useState(attendee !== undefined)
+
+    useEffect(() => {
+        if (!searchParams.get("open_form")) setShowCard(false)
+    }, [searchParams]) 
 
     const handleShowCard = () => {
         audioPlayerRef.current && audioPlayerRef.current.audioEl.current?.play();
@@ -104,13 +109,16 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
 
     return (
         <>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", zIndex: -1, width: "100vw", height: "100vh" }}>
+                <Loading />
+            </div>
             <div ref={componentRef} style={{ display: isOpenForm ? "block" : "none", zIndex: 2, position: "absolute", backgroundColor: "rgba(0,0,0,0.8)" }}>
                 <FormAdd id={id} code={code} onFormSubmit={handleFormSubmit} attendee={attendee} />
             </div>
             {audio_url &&
                 <ReactAudioPlayer
                     ref={audioPlayerRef}
-                    src={audio_url}  // Utilise le chemin relatif depuis le dossier public
+                    src={'/assets/audio/audio.mp3'}  // Utilise le chemin relatif depuis le dossier public
                     autoPlay={true}
                 />
             }

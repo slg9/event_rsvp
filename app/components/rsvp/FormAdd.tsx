@@ -55,6 +55,7 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
     useEffect(() => {
         attendeeIsUpdate && setTimeout(() => {
             setAttendeeIsUpdated(false)
+            onFormSubmit()
         }, 4000)
     }, [attendeeIsUpdate])
 
