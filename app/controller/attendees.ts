@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache"
 import { CreateAttendee, UpdateAttendee } from "../db/queries/attendees"
 import { redirect } from "next/navigation"
+import { InputSMS, sendSMS } from "../sms/sms"
+import moment from "moment"
 
-export async function  CreateAttendeeController (formdata: FormData,code:string) {
+export async function CreateAttendeeController(formdata: FormData, code: string) {
     console.log("click")
     const firstname = formdata.get("firstname") as string || ''
     const lastname = formdata.get("lastname") as string || ''
@@ -17,35 +19,46 @@ export async function  CreateAttendeeController (formdata: FormData,code:string)
     const departure = formdata.get("departure") as string || ''
     const comment = formdata.get("adults") as string || ''
     const attending = formdata.get("attending") as 'oui | non' || 'non'
-    let parsedAdults :number | undefined = undefined
-    let parsedArrival :string | undefined = undefined
-    let parsedDeparture :string | undefined = undefined
-    let parsedComment :string | undefined = undefined
-    if (adults != ''){
+    let parsedAdults: number | undefined = undefined
+    let parsedArrival: string | undefined = undefined
+    let parsedDeparture: string | undefined = undefined
+    let parsedComment: string | undefined = undefined
+    if (adults != '') {
         parsedAdults = parseInt(adults)
     }
-    if (arrival != ''){
+    if (arrival != '') {
         parsedArrival = arrival
     }
-    if (departure != ''){
+    if (departure != '') {
         parsedDeparture = departure
     }
-    if (comment != ''){
+    if (comment != '') {
         parsedComment = comment
     }
     const parsedPhone = parseInt(phone);
 
-    if (firstname && lastname && email && !isNaN(parsedPhone) ) {
-        const attendee =  await CreateAttendee(event_id, firstname, lastname, email, parsedPhone, phone_prefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
-        
-        
+    if (firstname && lastname && email && !isNaN(parsedPhone)) {
+        const attendee = await CreateAttendee(event_id, firstname, lastname, email, parsedPhone, phone_prefix, parsedAdults, parsedArrival, parsedDeparture, parsedComment, attending);
+        // Example usage
+        if (attendee.length > 0 && attendee[0].attending === 'oui') {
+            const inputSMS: InputSMS = {
+                recipient: `${attendee[0].phone_prefix}${attendee[0].phone}`,
+                content: `Salut! ${attendee[0].firstname} ${attendee[0].lastname}. On se voit le ${moment(attendee[0].arrival).format("DD-MMM")}. A bientot :)`,
+            };
+
+            sendSMS(inputSMS)
+                .then((response) => console.log('SMS Sent:', response))
+                .catch((error) => console.error('Error:', error));
+        }
+
+
         return attendee
     } else {
         throw new Error('Données de formulaire manquantes ou incorrectes');
     }
 }
 
-export async function  UpdateAttendeeController (formdata: FormData,code:string,id:string) {
+export async function UpdateAttendeeController(formdata: FormData, code: string, id: string) {
     console.log("click")
     const firstname = formdata.get("firstname") as string || ''
     const lastname = formdata.get("lastname") as string || ''
@@ -58,27 +71,37 @@ export async function  UpdateAttendeeController (formdata: FormData,code:string,
     const departure = formdata.get("departure") as string || ''
     const comment = formdata.get("adults") as string || ''
     const attending = formdata.get("attending") as 'oui | non' || 'non'
-    let parsedAdults :number | undefined = undefined
-    let parsedArrival :string | undefined = undefined
-    let parsedDeparture :string | undefined = undefined
-    let parsedComment :string | undefined = undefined
-    if (adults != ''){
+    let parsedAdults: number | undefined = undefined
+    let parsedArrival: string | undefined = undefined
+    let parsedDeparture: string | undefined = undefined
+    let parsedComment: string | undefined = undefined
+    if (adults != '') {
         parsedAdults = parseInt(adults)
     }
-    if (arrival != ''){
+    if (arrival != '') {
         parsedArrival = arrival
     }
-    if (departure != ''){
+    if (departure != '') {
         parsedDeparture = departure
     }
-    if (comment != ''){
+    if (comment != '') {
         parsedComment = comment
     }
     const parsedPhone = parseInt(phone);
-   
+
 
     if (firstname && lastname && email && !isNaN(parsedPhone)) {
-        const attendee = await UpdateAttendee(id, firstname, lastname, email, parsedPhone, phone_prefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
+        const attendee = await UpdateAttendee(id, firstname, lastname, email, parsedPhone, phone_prefix, parsedAdults, parsedArrival, parsedDeparture, parsedComment, attending);
+        if (attendee.length > 0 && attendee[0].attending === 'oui') {
+            const inputSMS: InputSMS = {
+                recipient: `${attendee[0].phone_prefix}${attendee[0].phone}`,
+                content: `Salut! ${attendee[0].firstname} ${attendee[0].lastname}. On se voit le ${moment(attendee[0].arrival).format("DD-MMM")}. A bientot :)`,
+            };
+
+            sendSMS(inputSMS)
+                .then((response) => console.log('SMS Sent:', response))
+                .catch((error) => console.error('Error:', error));
+        }
         revalidatePath(`/rsvp/${code}/${id}`)
         return attendee
     } else {

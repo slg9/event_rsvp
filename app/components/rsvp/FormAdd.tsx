@@ -116,7 +116,7 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
 
 
                 <>
-                    
+
 
                     <div className={`${styles['form-row']} ${isAttending === "oui" ? styles['form-group-visible'] : styles['form-group-hidden']}`}>
                         <div className={styles['form-group']}>
@@ -125,15 +125,17 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
                         </div>
                     </div>
 
-                    {isAttending ==="oui" && <div className={`${styles['form-row-resp']} ${isAttending === "oui" ? styles['form-group-visible'] : styles['form-group-hidden']}`}>
+                    {isAttending === "oui" && <div className={`${styles['form-row-resp']} ${isAttending === "oui" ? styles['form-group-visible'] : styles['form-group-hidden']}`}>
                         <div className={styles['form-group']}>
-                            <input type="date" id="arrival" name="arrival" min="2024-10-11" max="2024-10-13" required={isAttending==="oui"} placeholder="Date d'arrivée" defaultValue={moment(attendeeCreated?.arrival).format("YYYY-MM-DD") || ''} />
+                            <label htmlFor="arrival">Date d'arrivée:</label>
+                            <input type="date" id="arrival" name="arrival" min="2024-10-11" max="2024-10-13" required={isAttending === "oui"} placeholder="Date d'arrivée" defaultValue={moment(attendeeCreated?.arrival).format("YYYY-MM-DD") || ''} />
                         </div>
                         <div className={styles['form-group']}>
-                            <input type="date" id="departure" name="departure" min="2024-10-11" max="2024-10-13" required={isAttending==="oui"} placeholder="Date de départ" defaultValue={moment(attendeeCreated?.departure).format("YYYY-MM-DD") || ''} />
+                            <label htmlFor="departure">Date départ:</label>
+                            <input type="date" id="departure" name="departure" min="2024-10-11" max="2024-10-13" required={isAttending === "oui"} placeholder="Date de départ" defaultValue={moment(attendeeCreated?.departure).format("YYYY-MM-DD") || ''} />
                         </div>
                     </div>}
-                    
+
                 </>
 
 
