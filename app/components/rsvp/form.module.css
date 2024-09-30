@@ -1,11 +1,13 @@
 /* Conteneur pour centrer le formulaire au milieu de la page */
 .page-container {
+    position: absolute;
+    top:0;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
     height: 100vh; /* Prend toute la hauteur de la page */
-    background-color: transparent; /* Arrière-plan de la page */
+    background-color: rgba(0, 0, 0, 0.8); /* Arrière-plan de la page */
     padding: 20px;
 }
   
@@ -32,11 +34,29 @@
     justify-content: space-between;
     gap: 15px;
 }
+.form-row-resp {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
 
 /* Chaque groupe prend une partie de la ligne */
 .form-group {
     flex: 1;
     margin-bottom: 15px;
+}
+
+.form-group-hidden {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.form-group-visible {
+    max-height: 200px; /* Ajuste la hauteur max selon tes besoins */
+    opacity: 1;
+    transition: all 0.3s ease;
 }
 
 /* Style des labels */
@@ -53,9 +73,10 @@
     width: 100%;
     padding: 10px;
     font-size: 16px;
-    border-radius: 8px;
+    border-radius: 8px !important;
     border: 1px solid #ccc;
     transition: border-color 0.3s ease;
+  
 }
 
 .form-group input:focus,
@@ -100,7 +121,7 @@
         flex-direction: column;
     }
 
-    .form-group input {
+    .form-group input,.form-group select  {
         font-size: 14px;
         padding: 8px;
     }
@@ -128,4 +149,17 @@
 .radio-group input[type="radio"] {
     color: white;
     margin-right: 8px;
+}
+
+.phone-prefix {
+    position: absolute;
+    top: 12px; /* Ajuste cette valeur pour la hauteur du champ */
+    left: 2px;
+    z-index: 1;
+}
+
+/* Assurer que le champ téléphone est en-dessous */
+.phone-field {
+    padding-left: 80px !important; /* Ajuste cet espace pour éviter que le select chevauche le champ */
+    margin-top: 10px; /* Ajuste cette valeur pour espacer le champ du select */
 }

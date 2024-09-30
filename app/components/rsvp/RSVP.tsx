@@ -5,18 +5,23 @@ import ClickHere from './ClickHere'
 import styles from './rsvp.module.css'
 import FormAdd from './FormAdd'
 import { Attendee } from '@/app/db/models/attendees'
-import { redirect, usePathname, useSearchParams } from 'next/navigation'
+import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation'
 import ReactAudioPlayer from 'react-audio-player'
 import Link from 'next/link'
 import Anouncement from './Anoucement'
+import gsap, { Elastic, Power4 } from 'gsap'
 
 
 
 function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attendee | undefined, code: string, audio_url?: string }) {
     const [isOpenForm, setOpenForm] = useState(false)
+    const componentRef = useRef<HTMLDivElement>(null);
+    const componentRefFirst = useRef<HTMLDivElement>(null);
     const audioPlayerRef = useRef<ReactAudioPlayer>(null);
     const pathname = usePathname()
     const searchParams = useSearchParams()
+
+    const router = useRouter()
 
     const toggle = useCallback(() => {
         setOpenForm(o => !o)
@@ -34,35 +39,74 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
         }
     }, [id, code, attendee])
 
-    useEffect(() => {
-        audioPlayerRef.current && audioPlayerRef.current.audioEl.current?.play();
-        console.log(audioPlayerRef)
-    }, [audioPlayerRef])
-
-
     const [showCard, setShowCard] = useState(false)
 
-    useEffect(() => {
-        let o = searchParams.get("open_form")
-        if (o && o === "true") {
-            setShowCard(true)
-        }
-    }, [searchParams])
-
-    if (!showCard) {
-        return <div className={styles["home_invitation"]}>
-            <div style={{ display: "flex",alignItems:"center",fontWeight:"bold",fontSize:"30px" }}>
-                <Anouncement />
-                <div style={{ fontFamily: "'Patrick Hand', cursive", color: "#c2a767" }}>
-                    Vous êtes invité!!
-                </div>
-            </div>
-
-            <Link href={`${pathname}?open_form=true`} className={styles["btn_show"]}>Voir l'invitation</Link>
-        </div>
+    const handleShowCard = () => {
+        audioPlayerRef.current && audioPlayerRef.current.audioEl.current?.play();
+        setShowCard(true)
+        router.push(`${pathname}?open_form=true`)
     }
+
+    useEffect(() => {
+        if (isOpenForm && componentRef.current) {
+            // Réinitialiser l'animation avant l'apparition
+            gsap.set(componentRef.current, { scale: 0.8, opacity: 0, rotationY: 90 });
+
+            // Animation d'apparition avec un effet élastique et rotation 3D
+            gsap.to(componentRef.current, {
+                scale: 1,
+                opacity: 1,
+                rotationY: 0,
+                duration: 1.2,
+                ease: Elastic.easeOut.config(1, 0.75),
+                delay: 0.1,
+            });
+        } else if (!isOpenForm && componentRef.current) {
+            // Animation de disparition avec un effet dynamique
+            gsap.to(componentRef.current, {
+                scale: 0.8,
+                opacity: 0,
+                rotationY: 90,
+                duration: 0.6,
+                ease: Power4.easeIn,
+                onComplete: () => setOpenForm(false), // Cache l'élément après l'animation
+            });
+        }
+    }, [isOpenForm]);
+
+    useEffect(() => {
+        if (!showCard && componentRefFirst.current) {
+            // Réinitialiser l'animation avant l'apparition
+            gsap.set(componentRefFirst.current, { scale: 0.8, opacity: 0, rotationY: 90 });
+
+            // Animation d'apparition avec un effet élastique et rotation 3D
+            gsap.to(componentRefFirst.current, {
+                scale: 1,
+                opacity: 1,
+                rotationY: 0,
+                duration: 1.2,
+                ease: Elastic.easeOut.config(1, 0.75),
+                delay: 0.1,
+            });
+        } else if (!showCard && componentRefFirst.current) {
+            // Animation de disparition avec un effet dynamique
+            gsap.to(componentRefFirst.current, {
+                scale: 0.8,
+                opacity: 0,
+                rotationY: 90,
+                duration: 0.6,
+                ease: Power4.easeIn,
+                onComplete: () => setShowCard(false), // Cache l'élément après l'animation
+            });
+        }
+    }, [showCard]);
+
+
     return (
         <>
+            <div ref={componentRef} style={{ display: isOpenForm ? "block" : "none", zIndex: 2, position: "absolute", backgroundColor: "rgba(0,0,0,0.8)" }}>
+                <FormAdd id={id} code={code} onFormSubmit={handleFormSubmit} attendee={attendee} />
+            </div>
             {audio_url &&
                 <ReactAudioPlayer
                     ref={audioPlayerRef}
@@ -70,13 +114,24 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
                     autoPlay={true}
                 />
             }
-            <div style={{ position: "fixed", zIndex: 3, right: 20, top: 20, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <div onClick={toggle} className={styles.btn_rsvp} > {!isOpenForm ? "RSVP" : "Retour"} </div>
-                <ClickHere />
-            </div>
-            {isOpenForm && <div style={{ zIndex: 2, position: "absolute", backgroundColor: "rgba(0,0,0,0.8)" }}>
-                <FormAdd id={id} code={code} onFormSubmit={handleFormSubmit} attendee={attendee} />
-            </div>}
+            {
+                !showCard ? <div ref={componentRefFirst} className={styles["home_invitation"]}>
+                    <div style={{ display: "flex", alignItems: "center", fontWeight: "bold", fontSize: "30px" }}>
+                        <img width={"300px"} src="/assets/gif/anouncement.gif" alt="message" />
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", fontWeight: "bold", fontSize: "30px" }}>
+                        <Anouncement />
+                    </div>
+                    <button onClick={handleShowCard} className={styles["btn_show"]}>Ouvrir</button>
+                </div> :
+                    <div style={{ position: "sticky", zIndex: 3, right: 0, top: 20, paddingRight: 10, display: "flex", flexDirection: "column", alignItems: "end" }}>
+                        <div onClick={toggle} className={styles.btn_rsvp} > {!isOpenForm ? "RSVP" : "Retour"} </div>
+                        <ClickHere />
+                    </div>
+
+            }
+
+
         </>
 
     )
