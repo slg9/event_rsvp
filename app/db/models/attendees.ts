@@ -7,4 +7,8 @@ export type Attendee = {
     email: string;
     phone: number;
     phone_prefix: number;
+    adults?:number;
+    arrival?:string;
+    departure?:string;
+    comment?:string;
 }
