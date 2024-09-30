@@ -153,7 +153,7 @@
 
 .phone-prefix {
     position: absolute;
-    top: 12px; /* Ajuste cette valeur pour la hauteur du champ */
+    top: 14px; /* Ajuste cette valeur pour la hauteur du champ */
     left: 2px;
     z-index: 1;
 }
