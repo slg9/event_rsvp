@@ -1,65 +1,111 @@
 .container {
-    position: relative; 
-    width: 100vw; 
-    height: 100vh; 
-    padding-bottom: 0; 
-    box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16);  
-    overflow: hidden;
-    border-radius: 8px; 
-    will-change: transform;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  padding-bottom: 0;
+  box-shadow: 0 2px 8px 0 rgba(63, 69, 81, 0.16);
+  overflow: hidden;
+  border-radius: 8px;
+  will-change: transform;
+}
+
+.home_invitation {
+  position: absolute;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  padding-bottom: 0;
+  box-shadow: 0 2px 8px 0 rgba(63, 69, 81, 0.16);
+  overflow: hidden;
+  border-radius: 8px;
+  will-change: transform;
+  background-color: #0D1217;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+
+
+
+
+
+.btn_show {
+  padding: 10px 15px;
+  background-color: #c2a767;
+  border: 1px solid #c2a767;
+  color: #0D1217;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+  animation: heartbeat 1.5s infinite;
 }
 
 .iframe {
-    position: absolute; 
-    width: 100vw; 
-    height: 100%; 
-    top: 0; 
-    left: 0; 
-    border: none; 
-    padding: 0;
-    margin: 0;
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 
 
 .btn_rsvp {
-    padding: 10px 15px;
-    background-color: #c2a767;
-    border:1px solid #c2a767;
-    color: #0D1217;
-    font-weight: bold;
-    font-size: 18px;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 10px;
-    animation: heartbeat 1.5s infinite;
+  padding: 10px 15px;
+  background-color: #c2a767;
+  border: 1px solid #c2a767;
+  color: #0D1217;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+  animation: heartbeat 1.5s infinite;
+}
+
+.btn_rsvp:hover {
+  background-color: #0D1217;
+  border: 1px solid #c2a767;
+  color: #c2a767;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
   }
 
-  .btn_rsvp:hover {
-    background-color: #0D1217;
-    border:1px solid #c2a767;
-    color:#c2a767;
+  25% {
+    transform: scale(1.1);
   }
 
-  @keyframes heartbeat {
-    0% {
-      transform: scale(1);
-    }
-    25% {
-      transform: scale(1.1);
-    }
-    50% {
-      transform: scale(1);
-    }
-    75% {
-      transform: scale(1.1);
-    }
-    100% {
-      transform: scale(1);
-    }
+  50% {
+    transform: scale(1);
   }
+
+  75% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

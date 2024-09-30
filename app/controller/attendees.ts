@@ -1,8 +1,10 @@
 'use server'
 
+import { revalidatePath } from "next/cache"
 import { CreateAttendee, UpdateAttendee } from "../db/queries/attendees"
+import { redirect } from "next/navigation"
 
-export async function  CreateAttendeeController (formdata: FormData) {
+export async function  CreateAttendeeController (formdata: FormData,code:string) {
     console.log("click")
     const firstname = formdata.get("firstname") as string || ''
     const lastname = formdata.get("lastname") as string || ''
@@ -14,6 +16,7 @@ export async function  CreateAttendeeController (formdata: FormData) {
     const arrival = formdata.get("arrival") as string || ''
     const departure = formdata.get("departure") as string || ''
     const comment = formdata.get("adults") as string || ''
+    const attending = formdata.get("attending") as 'oui | non' || 'non'
     let parsedAdults :number | undefined = undefined
     let parsedArrival :string | undefined = undefined
     let parsedDeparture :string | undefined = undefined
@@ -34,13 +37,16 @@ export async function  CreateAttendeeController (formdata: FormData) {
     const parsedPhonePrefix = parseInt(phone_prefix);
 
     if (firstname && lastname && email && !isNaN(parsedPhone) && !isNaN(parsedPhonePrefix)) {
-        return await CreateAttendee(event_id, firstname, lastname, email, parsedPhone, parsedPhonePrefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment);
+        const attendee =  await CreateAttendee(event_id, firstname, lastname, email, parsedPhone, parsedPhonePrefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
+        
+        
+        return attendee
     } else {
         throw new Error('Données de formulaire manquantes ou incorrectes');
     }
 }
 
-export async function  UpdateAttendeeController (formdata: FormData,id:string) {
+export async function  UpdateAttendeeController (formdata: FormData,code:string,id:string) {
     console.log("click")
     const firstname = formdata.get("firstname") as string || ''
     const lastname = formdata.get("lastname") as string || ''
@@ -52,6 +58,7 @@ export async function  UpdateAttendeeController (formdata: FormData,id:string) {
     const arrival = formdata.get("arrival") as string || ''
     const departure = formdata.get("departure") as string || ''
     const comment = formdata.get("adults") as string || ''
+    const attending = formdata.get("attending") as 'oui | non' || 'non'
     let parsedAdults :number | undefined = undefined
     let parsedArrival :string | undefined = undefined
     let parsedDeparture :string | undefined = undefined
@@ -72,7 +79,9 @@ export async function  UpdateAttendeeController (formdata: FormData,id:string) {
     const parsedPhonePrefix = parseInt(phone_prefix);
 
     if (firstname && lastname && email && !isNaN(parsedPhone) && !isNaN(parsedPhonePrefix)) {
-        return await UpdateAttendee(event_id, firstname, lastname, email, parsedPhone, parsedPhonePrefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment);
+        const attendee = await UpdateAttendee(id, firstname, lastname, email, parsedPhone, parsedPhonePrefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
+        revalidatePath(`/rsvp/${code}/${id}`)
+        return attendee
     } else {
         throw new Error('Données de formulaire manquantes ou incorrectes');
     }

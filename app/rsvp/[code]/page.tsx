@@ -2,8 +2,6 @@
 import { GetEventByCode } from "@/app/db/queries/events"
 import styles from '@/app/components/rsvp/rsvp.module.css'
 import RSVP from "@/app/components/rsvp/RSVP"
-import { redirect } from "next/navigation"
-import { useEffect } from "react"
 
 
 export default async function Home({ params, searchParams }: { params: { code: string }, searchParams: { open_form?: string } }) {
@@ -11,15 +9,20 @@ export default async function Home({ params, searchParams }: { params: { code: s
   if (event.length === 0 || (event.length > 0 && !event[0].canva_url)) {
     return <div>not found</div>
   }
-
-  
-  
   return (
     <div className={styles.container}>
-      <iframe loading="lazy" className={styles.iframe}
-        src={event[0].canva_url} >
-      </iframe>
-      <RSVP id={event[0].id} attendee={undefined} code={params.code}  />
+      {searchParams?.open_form === "true" &&
+        <iframe loading="lazy" className={styles.iframe}
+          src={event[0].canva_url} >
+        </iframe>
+      }
+
+      <RSVP
+        id={event[0].id}
+        attendee={undefined}
+        code={params.code}
+        audio_url={event[0].audio_url}
+      />
 
 
     </div>)

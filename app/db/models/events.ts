@@ -10,6 +10,7 @@ export type Event = {
     end: string;
     code: string;
     canva_url?:string;
+    audio_url?:string;
 }
 
 export type Question = {

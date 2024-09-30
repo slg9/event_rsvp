@@ -20,14 +20,7 @@
 }
 
 .message {
-    max-width: 600px;
-    color:white;
-    font-weight: bold;
-    width: 100%;
-    padding: 50px;
-    background-color: rgba(194, 167, 103, 0.3);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
     display:flex;
     align-items:center;
     justify-content: center;
