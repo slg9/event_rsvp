@@ -18,7 +18,7 @@ export const metadata:Metadata = {
   title: 'Gestion d\'Événements - RSVP et Dashboard Organisateur',
   description: 'Un site pour gérer les événements, afficher les cartes, gérer les réponses RSVP avec accusé de réception par mail et fournir un tableau de bord pour les organisateurs.',
   keywords: ['événements', 'RSVP', 'gestion des réponses', 'tableau de bord organisateur', 'cartes', 'email', 'accusé de réception'],
-  openGraph: {
+  openGraph: { 
     title: 'Gestion d\'Événements - RSVP et Dashboard Organisateur',
     description: 'Gérez vos événements, vos cartes et vos réponses RSVP.',
     siteName: 'Gestion d\'Événements',
