@@ -17,7 +17,6 @@ async function sendMail(
 ) {
 
     let emailFrom = process.env.API_MAILJET_FROM;
-
     try {
         const request = await mailjet.post('send', { version: 'v3.1' }).request({
             Messages: [
