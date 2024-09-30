@@ -24,6 +24,7 @@ export interface InputSMS {
 
 // Send function to handle the API call
 export async function sendSMS(input: InputSMS): Promise<Response> {
+   
     const apikey = process.env.SENDINBLUE_KEY;
     
     const url = `${BASE_URL}${SEND_SMS_ENDPOINT}`;
@@ -44,7 +45,7 @@ export async function sendSMS(input: InputSMS): Promise<Response> {
             },
         });
 
-        return response.data;
+        return response.data; 
     } catch (error) {
         if (axios.isAxiosError(error)) {
             console.error('Error message:', error.message);
