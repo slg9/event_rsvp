@@ -18,6 +18,7 @@ export async function GetEventByCode(code: string) {
     `
     return data.rows;
 }
+
 export async function ListEvents(id?: string,date?:string,query?:string) {
     const data = await sql<Event>`
     SELECT * FROM events
