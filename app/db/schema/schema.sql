@@ -49,7 +49,7 @@ CREATE TABLE "attendees"(
     "lastname" text NOT NULL,
     "email" text NOT NULL,
     "phone" int NOT NULL,
-    "phone_prefix" int NOT NULL,
+    "phone_prefix" text NOT NULL,
     "adults" int ,
     "arrival" timestamp,
     "departure" timestamp,

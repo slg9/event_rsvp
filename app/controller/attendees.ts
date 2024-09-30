@@ -34,10 +34,9 @@ export async function  CreateAttendeeController (formdata: FormData,code:string)
         parsedComment = comment
     }
     const parsedPhone = parseInt(phone);
-    const parsedPhonePrefix = parseInt(phone_prefix);
 
-    if (firstname && lastname && email && !isNaN(parsedPhone) && !isNaN(parsedPhonePrefix)) {
-        const attendee =  await CreateAttendee(event_id, firstname, lastname, email, parsedPhone, parsedPhonePrefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
+    if (firstname && lastname && email && !isNaN(parsedPhone) ) {
+        const attendee =  await CreateAttendee(event_id, firstname, lastname, email, parsedPhone, phone_prefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
         
         
         return attendee
@@ -76,10 +75,10 @@ export async function  UpdateAttendeeController (formdata: FormData,code:string,
         parsedComment = comment
     }
     const parsedPhone = parseInt(phone);
-    const parsedPhonePrefix = parseInt(phone_prefix);
+   
 
-    if (firstname && lastname && email && !isNaN(parsedPhone) && !isNaN(parsedPhonePrefix)) {
-        const attendee = await UpdateAttendee(id, firstname, lastname, email, parsedPhone, parsedPhonePrefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
+    if (firstname && lastname && email && !isNaN(parsedPhone)) {
+        const attendee = await UpdateAttendee(id, firstname, lastname, email, parsedPhone, phone_prefix,parsedAdults,parsedArrival,parsedDeparture,parsedComment,attending);
         revalidatePath(`/rsvp/${code}/${id}`)
         return attendee
     } else {

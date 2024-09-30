@@ -20,7 +20,7 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
         setLoading(true); // Activer l'état de chargement
         const formData = new FormData(e.currentTarget); // Récupérer les données du formulaire
         if (attendee === undefined) {
-            CreateAttendeeController(formData,code).then(res => {
+            CreateAttendeeController(formData, code).then(res => {
                 if (res.length > 0 && res[0].id != '') {
                     setAttendeeCreated(res[0])
                     setAttendeeIsUpdated(true)
@@ -28,7 +28,7 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
                     router.push(`/rsvp/${code}/${res[0].id}?open_form=true`);
                 }
                 setLoading(false);
-              
+
             })
 
         } else {
@@ -66,32 +66,28 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
                 <input type="hidden" name="event_id" value={id} />
 
                 {/* Nom et Prénom sur la même ligne */}
-                <div className={styles['form-row']}>
+                <div className={styles['form-row-resp']}>
                     <div className={styles['form-group']}>
-                        <label htmlFor="lastname">Nom:</label>
-                        <input type="text" id="lastname" name="lastname" required defaultValue={attendeeCreated?.lastname || ''} />
+                        <input type="text" id="lastname" name="lastname" required placeholder="Nom" defaultValue={attendeeCreated?.lastname || ''} />
                     </div>
                     <div className={styles['form-group']}>
-                        <label htmlFor="firstname">Prénom:</label>
-                        <input type="text" id="firstname" name="firstname" required defaultValue={attendeeCreated?.firstname || ''} />
+                        <input type="text" id="firstname" name="firstname" required placeholder="Prénom" defaultValue={attendeeCreated?.firstname || ''} />
                     </div>
                 </div>
 
                 {/* Email sur une ligne séparée */}
                 <div className={styles['form-group']}>
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" required defaultValue={attendeeCreated?.email || ''} />
+                    <input type="email" id="email" name="email" required placeholder="Email" defaultValue={attendeeCreated?.email || ''} />
                 </div>
 
                 {/* Préfixe Téléphone et Téléphone sur la même ligne */}
-                <div className={styles['form-row']}>
-                    <div className={styles['form-group']}>
-                        <label htmlFor="phone_prefix">Préfixe Téléphone:</label>
-                        <input type="number" id="phone_prefix" name="phone_prefix" required defaultValue={attendeeCreated?.phone_prefix || ''} />
-                    </div>
-                    <div className={styles['form-group']}>
-                        <label htmlFor="phone">Téléphone:</label>
-                        <input type="number" id="phone" name="phone" required defaultValue={attendeeCreated?.phone || ''} />
+                <div className={styles['form-row-resp']}>
+                    <div className={styles['form-group']} style={{ position: 'relative' }}>
+                        <select id="phone_prefix" name="phone_prefix" required defaultValue={attendeeCreated?.phone_prefix || '+262'} className={styles['phone-prefix']}>
+                            <option value="+262">+262</option>
+                            <option value="+33">+33</option>
+                        </select>
+                        <input type="number" id="phone" name="phone" required placeholder="Téléphone" defaultValue={attendeeCreated?.phone || ''} className={styles['phone-field']} />
                     </div>
                 </div>
 
@@ -99,7 +95,7 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
                 <div className={styles['form-row']}>
 
                     <div className={styles['radio-group']}>
-                        <label style={{ color: "white" }} htmlFor="attending">Je viens :</label>
+                        <span style={{ color: "white" }}>Je viens :</span>
                         <label>
                             <input type="radio" checked={isAttending === "oui"} id="attending-yes" name="attending" value="oui" required onChange={() => setIsAttending('oui')} />
                             Oui
@@ -111,35 +107,34 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
                     </div>
                     {isAttending === "oui" &&
                         <div className={styles['form-group']}>
-                            <label htmlFor="adults">Nombre d'adultes:</label>
-                            <input type="number" id="adults" name="adults" required defaultValue={attendeeCreated?.adults || ''} />
+                            <input type="number" id="adults" name="adults" required placeholder="Nombre d'adultes" defaultValue={attendeeCreated?.adults || ''} />
                         </div>
                     }
 
                 </div>
 
-                {isAttending === "oui" &&
-                    <>
-                        <div className={styles['form-row']}>
-                            <div className={styles['form-group']}>
-                                <label htmlFor="comment">Ce que vous apportez:</label>
-                                <textarea id="comment" name="comment" defaultValue={attendeeCreated?.comment || ''}></textarea>
-                            </div>
-                        </div>
 
-                        {/* Date d'arrivée et Date de retour, limitées aux 11, 12, et 13 octobre */}
-                        <div className={styles['form-row']}>
-                            <div className={styles['form-group']}>
-                                <label htmlFor="arrival">Date d'arrivée:</label>
-                                <input type="date" id="arrival" name="arrival" min="2024-10-11" max="2024-10-13" required defaultValue={moment(attendeeCreated?.arrival).format("YYYY-MM-DD") || ''} />
-                            </div>
-                            <div className={styles['form-group']}>
-                                <label htmlFor="departure">Date de départ:</label>
-                                <input type="date" id="departure" name="departure" min="2024-10-11" max="2024-10-13" required defaultValue={moment(attendeeCreated?.departure).format("YYYY-MM-DD") || ''} />
-                            </div>
+                <>
+                    
+
+                    <div className={`${styles['form-row']} ${isAttending === "oui" ? styles['form-group-visible'] : styles['form-group-hidden']}`}>
+                        <div className={styles['form-group']}>
+                            <label htmlFor="comment">Ce que vous apportez:</label>
+                            <textarea id="comment" name="comment" defaultValue={attendeeCreated?.comment || ''}></textarea>
                         </div>
-                    </>
-                }
+                    </div>
+
+                    {isAttending ==="oui" && <div className={`${styles['form-row-resp']} ${isAttending === "oui" ? styles['form-group-visible'] : styles['form-group-hidden']}`}>
+                        <div className={styles['form-group']}>
+                            <input type="date" id="arrival" name="arrival" min="2024-10-11" max="2024-10-13" required={isAttending==="oui"} placeholder="Date d'arrivée" defaultValue={moment(attendeeCreated?.arrival).format("YYYY-MM-DD") || ''} />
+                        </div>
+                        <div className={styles['form-group']}>
+                            <input type="date" id="departure" name="departure" min="2024-10-11" max="2024-10-13" required={isAttending==="oui"} placeholder="Date de départ" defaultValue={moment(attendeeCreated?.departure).format("YYYY-MM-DD") || ''} />
+                        </div>
+                    </div>}
+                    
+                </>
+
 
                 {/* Bouton de soumission */}
                 {loading ? <div style={{ display: "flex", justifyContent: "center" }}> <LetterSend /> </div> :
@@ -154,11 +149,6 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
 
                 }
             </form>
-
-
-
-
-
         </div>
     );
 };
