@@ -16,6 +16,7 @@ import Loading from './Loading'
 
 function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attendee | undefined, code: string, audio_url?: string }) {
     const [isOpenForm, setOpenForm] = useState(false)
+    const [showRSVP, setShowRSVP] = useState(false)
     const componentRef = useRef<HTMLDivElement>(null);
     const componentRefFirst = useRef<HTMLDivElement>(null);
     const audioPlayerRef = useRef<ReactAudioPlayer>(null);
@@ -44,7 +45,7 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
 
     useEffect(() => {
         if (!searchParams.get("open_form")) setShowCard(false)
-    }, [searchParams]) 
+    }, [searchParams])
 
     const handleShowCard = () => {
         audioPlayerRef.current && audioPlayerRef.current.audioEl.current?.play();
@@ -106,6 +107,14 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
         }
     }, [showCard]);
 
+    let delay:number = parseInt(process.env.NEXT_PUBLIC_DELAY_TRANSITON ||"2") * 1000
+    useEffect(() => {
+        showCard && setTimeout(() => {
+            console.log(process.env.NEXT_PUBLIC_DELAY_TRANSITON )
+            setShowRSVP(true)
+        }, delay)
+    }, [showCard,delay])
+
 
     return (
         <>
@@ -132,7 +141,7 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
                     </div>
                     <button onClick={handleShowCard} className={styles["btn_show"]}>Ouvrir</button>
                 </div> :
-                    <div style={{ position: "sticky", zIndex: 3, right: 0, top: 20, paddingRight: 10, display: "flex", flexDirection: "column", alignItems: "end" }}>
+                    showRSVP && <div style={{ position: "sticky", zIndex: 3, right: 0, top: 20, paddingRight: 10, display: "flex", flexDirection: "column", alignItems: "end" }}>
                         <div onClick={toggle} className={styles.btn_rsvp} > {!isOpenForm ? "RSVP" : "Retour"} </div>
                         <ClickHere />
                     </div>

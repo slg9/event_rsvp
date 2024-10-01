@@ -122,7 +122,7 @@ export default function Form({ id, onFormSubmit, attendee, code }: { id: string,
 
                     <div className={`${styles['form-row']} ${isAttending === "oui" ? styles['form-group-visible'] : styles['form-group-hidden']}`}>
                         <div className={styles['form-group']}>
-                            <label htmlFor="comment">Ce que vous apportez:</label>
+                            <label htmlFor="comment">Ce que vous apportez<i> : repas partage et/ou instrument , combien d'enfants (age) ?</i>:</label>
                             <textarea id="comment" name="comment" defaultValue={attendeeCreated?.comment || ''}></textarea>
                         </div>
                     </div>
