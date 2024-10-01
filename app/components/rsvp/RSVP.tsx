@@ -118,7 +118,7 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
             {audio_url &&
                 <ReactAudioPlayer
                     ref={audioPlayerRef}
-                    src={'/assets/audio/audio.mp3'}  // Utilise le chemin relatif depuis le dossier public
+                    src={audio_url}  // Utilise le chemin relatif depuis le dossier public
                     autoPlay={true}
                 />
             }

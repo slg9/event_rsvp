@@ -66,24 +66,7 @@ export async function CreateAttendeeController(formdata: FormData, code: string)
                 amount = 39 * nb_night * (attendee[0].adults || 1)
                 info = `
                 Après quelques calculs (et oui, on a fait chauffer la calculette), pour ${attendee[0].adults} adultes et ${nb_night} nuit${nb_night > 1 ? 's' : ''}, ça te fera une modeste contribution de ${amount}€.Tu peux si tu le souhaites déjà envoyé ta contribution sur la cagnotte lydia :)`
-                link = `<a href="${process.env.LYDIA_LINK}" style="
-                        display: inline-block;
-                        padding: 10px 20px;
-                        font-size: 16px;
-                        font-family: Arial, sans-serif;
-                        text-align: center;
-                        text-decoration: none;
-                        background-color: #007BFF;
-                        color: white;
-                        border-radius: 25px;
-                        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
-                    " 
-                    onmouseover="this.style.backgroundColor='#0056b3'; this.style.boxShadow='0px 6px 8px rgba(0, 0, 0, 0.2)';"
-                    onmouseout="this.style.backgroundColor='#007BFF'; this.style.boxShadow='0px 4px 6px rgba(0, 0, 0, 0.1)';"
-                    >
-                        Contribuer via lydia
-                    </a>`
+                link = getButton(`${process.env.FRONT_HOST}/rsvp/${code}/${attendee[0].id}`)
             }
             let vars = {
                 firstname: attendee[0].firstname,
@@ -158,24 +141,7 @@ export async function UpdateAttendeeController(formdata: FormData, code: string,
                 amount = 39 * nb_night * (attendee[0].adults || 1)
                 info = `
                 Après quelques calculs (et oui, on a fait chauffer la calculette), pour ${attendee[0].adults} adultes et ${nb_night} nuit${nb_night > 1 ? 's' : ''}, ça te fera une modeste contribution de ${amount}€.Tu peux si tu le souhaites déjà envoyé ta contribution sur la cagnotte lydia :)`
-                link = `<a href="${process.env.LYDIA_LINK}" style="
-                        display: inline-block;
-                        padding: 10px 20px;
-                        font-size: 16px;
-                        font-family: Arial, sans-serif;
-                        text-align: center;
-                        text-decoration: none;
-                        background-color: #007BFF;
-                        color: white;
-                        border-radius: 25px;
-                        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
-                    " 
-                    onmouseover="this.style.backgroundColor='#0056b3'; this.style.boxShadow='0px 6px 8px rgba(0, 0, 0, 0.2)';"
-                    onmouseout="this.style.backgroundColor='#007BFF'; this.style.boxShadow='0px 4px 6px rgba(0, 0, 0, 0.1)';"
-                    >
-                        Contribuer via lydia
-                    </a>`
+                link = getButton(`${process.env.FRONT_HOST}/rsvp/${code}/${attendee[0].id}`)
             }
             let vars = {
                 firstname: attendee[0].firstname,
@@ -204,4 +170,49 @@ export async function UpdateAttendeeController(formdata: FormData, code: string,
     } else {
         throw new Error('Données de formulaire manquantes ou incorrectes');
     }
+}
+
+function getButton(link: string) {
+    return `
+    <div style="display: flex; justify-content: space-between; gap: 20px;">
+    <a href="${process.env.LYDIA_LINK}" style="
+                        display: inline-block;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                        text-decoration: none;
+                        background-color: #007BFF;
+                        color: white;
+                        border-radius: 25px;
+                        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                    " 
+                    onmouseover="this.style.backgroundColor='#0056b3'; this.style.boxShadow='0px 6px 8px rgba(0, 0, 0, 0.2)';"
+                    onmouseout="this.style.backgroundColor='#007BFF'; this.style.boxShadow='0px 4px 6px rgba(0, 0, 0, 0.1)';"
+                    >
+                        Contribuer via Lydia
+    </a>
+
+    <a href="${link}" style="
+                        display: inline-block;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                        text-decoration: none;
+                        background-color: #007BFF;
+                        color: white;
+                        border-radius: 25px;
+                        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                    " 
+                    onmouseover="this.style.backgroundColor='#0056b3'; this.style.boxShadow='0px 6px 8px rgba(0, 0, 0, 0.2)';"
+                    onmouseout="this.style.backgroundColor='#007BFF'; this.style.boxShadow='0px 4px 6px rgba(0, 0, 0, 0.1)';"
+                    >
+                        Modifier ma réponse
+    </a>
+</div>
+
+    `
 }
