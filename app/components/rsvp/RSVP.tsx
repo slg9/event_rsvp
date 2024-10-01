@@ -158,7 +158,7 @@ function RSVP({ id, attendee, code, audio_url,counters }: { id: string, attendee
             }
             <div style={{ position: "absolute", zIndex: 3, left: 0, top: 0, paddingLeft: 10, display: "flex", flexDirection: "row", gap: "15px" }}>
                 {counters.map((c, k) => (
-                    <CounterSVG key={k} {...c} max={22} />
+                    <CounterSVG key={k} {...c} max={32} />
                 ))}
 
             </div>
