@@ -14,9 +14,8 @@ export async function GetAttendee(id: string) {
 export async function ListAttendees(id?: string,event_id?: string,query?:string) {
     const data = await sql<Attendee>`
     SELECT * FROM attendees
-    WHERE (${id} = '' OR id = ${id})
-    AND (${event_id} = '' OR event_id = ${event_id})
-    AND (${query} = '' OR firstname ILIKE %${query}% OR lastname ILIKE %${query}% OR email ILIKE %${query}% OR phone ILIKE %${query}% OR phone_prefix ILIKE %${query}%    )
+    WHERE (${id}::text is null OR id = ${id})
+    AND (${event_id}::text is null OR event_id = ${event_id})
     `
     return data.rows;
 }

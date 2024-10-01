@@ -12,9 +12,12 @@ import Anouncement from './Anoucement'
 import gsap, { Elastic, Power4 } from 'gsap'
 import Loading from './Loading'
 
+import CounterSVG from '../widget/CounterSVG'
+import { NightOccupancy } from '@/app/utils/utils'
 
 
-function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attendee | undefined, code: string, audio_url?: string }) {
+
+function RSVP({ id, attendee, code, audio_url,counters }: { id: string, attendee: Attendee | undefined, code: string, audio_url?: string,counters:NightOccupancy[] }) {
     const [isOpenForm, setOpenForm] = useState(false)
     const [showRSVP, setShowRSVP] = useState(false)
     const componentRef = useRef<HTMLDivElement>(null);
@@ -22,6 +25,8 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
     const audioPlayerRef = useRef<ReactAudioPlayer>(null);
     const pathname = usePathname()
     const searchParams = useSearchParams()
+
+   
 
     const router = useRouter()
 
@@ -107,13 +112,13 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
         }
     }, [showCard]);
 
-    let delay:number = parseInt(process.env.NEXT_PUBLIC_DELAY_TRANSITON ||"2") * 1000
+    let delay: number = parseInt(process.env.NEXT_PUBLIC_DELAY_TRANSITON || "2") * 1000
     useEffect(() => {
         showCard && setTimeout(() => {
-            console.log(process.env.NEXT_PUBLIC_DELAY_TRANSITON )
+            console.log(process.env.NEXT_PUBLIC_DELAY_TRANSITON)
             setShowRSVP(true)
         }, delay)
-    }, [showCard,delay])
+    }, [showCard, delay])
 
 
     return (
@@ -141,12 +146,22 @@ function RSVP({ id, attendee, code, audio_url }: { id: string, attendee: Attende
                     </div>
                     <button onClick={handleShowCard} className={styles["btn_show"]}>Ouvrir</button>
                 </div> :
-                    showRSVP && <div style={{ position: "sticky", zIndex: 3, right: 0, top: 20, paddingRight: 10, display: "flex", flexDirection: "column", alignItems: "end" }}>
-                        <div onClick={toggle} className={styles.btn_rsvp} > {!isOpenForm ? "RSVP" : "Retour"} </div>
-                        <ClickHere />
-                    </div>
+                    <>
+
+                        {showRSVP && <div style={{ position: "sticky", zIndex: 3, right: 0, top: 20, paddingRight: 10, display: "flex", flexDirection: "column", alignItems: "end" }}>
+                            <div onClick={toggle} className={styles.btn_rsvp} > {!isOpenForm ? "RSVP" : "Retour"} </div>
+                            <ClickHere />
+
+                        </div>}
+                    </>
 
             }
+            <div style={{ position: "absolute", zIndex: 3, left: 0, top: 0, paddingLeft: 10, display: "flex", flexDirection: "row", gap: "15px" }}>
+                {counters.map((c, k) => (
+                    <CounterSVG key={k} {...c} max={22} />
+                ))}
+
+            </div>
 
 
         </>

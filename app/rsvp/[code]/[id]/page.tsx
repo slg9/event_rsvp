@@ -1,9 +1,10 @@
 import { GetEventByCode } from "@/app/db/queries/events"
 import styles from '@/app/components/rsvp/rsvp.module.css'
 import RSVP from "@/app/components/rsvp/RSVP"
-import { GetAttendee } from "@/app/db/queries/attendees"
+import { GetAttendee, ListAttendees } from "@/app/db/queries/attendees"
 import IframeLoader from "@/app/components/rsvp/IframeLoader"
 import Loading from "@/app/components/rsvp/Loading"
+import { AggregateAdultsPerNight, NightOccupancy } from "@/app/utils/utils"
 
 
 export default async function Home({ params, searchParams }: { params: { code: string, id: string }, searchParams: { open_form: string } }) {
@@ -16,6 +17,11 @@ export default async function Home({ params, searchParams }: { params: { code: s
     return <div>not found</div>
   }
 
+  const attendees = await ListAttendees(undefined, event[0].id)
+  let counters: NightOccupancy[] = [];
+  if (attendees.length > 0) {
+    counters = AggregateAdultsPerNight(attendees)
+  }
 
   return (
     <div className={styles.container}>
@@ -31,6 +37,7 @@ export default async function Home({ params, searchParams }: { params: { code: s
         attendee={attendee[0]}
         code={params.code}
         audio_url={event[0].audio_url}
+        counters={counters}
       />
 
       
