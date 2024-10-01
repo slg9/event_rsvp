@@ -81,14 +81,14 @@ export async function CreateAttendeeController(formdata: FormData, code: string)
                 .then((response) => console.log('Mail Sent:', response))
                 .catch((error) => console.error('Error:', error));
 
-            /* const inputSMS: InputSMS = {
+            const inputSMS: InputSMS = {
                 recipient: `${attendee[0].phone_prefix}${attendee[0].phone}`,
-                content: `Salut! ${attendee[0].firstname} ${attendee[0].lastname}. On se voit le ${moment(attendee[0].arrival).format("DD-MMM")}. A bientot :)`,
+                content: `Salut! ${attendee[0].firstname} ${attendee[0].lastname}. On se voit le ${moment(attendee[0].arrival).format("DD-MMM")}. A bientot :) Tu peux modifier ta réponse via le mail que tu as reçu ;)`,
             };
 
             sendSMS(inputSMS)
                 .then((response) => console.log('SMS Sent:', response))
-                .catch((error) => console.error('Error:', error)); */
+                .catch((error) => console.error('Error:', error)); 
         }
 
 
@@ -157,13 +157,13 @@ export async function UpdateAttendeeController(formdata: FormData, code: string,
                 .catch((error) => console.error('Error:', error));
 
 
-            /* const inputSMS: InputSMS = {
+            const inputSMS: InputSMS = {
                 recipient: `${attendee[0].phone_prefix}${attendee[0].phone}`,
-                content: `Salut! ${attendee[0].firstname} ${attendee[0].lastname}. On se voit le ${moment(attendee[0].arrival).format("DD-MMM")}. A bientot :)`,
+                content: `Salut! ${attendee[0].firstname} ${attendee[0].lastname}.La modif a été prise en compte ;). On se voit le ${moment(attendee[0].arrival).format("DD-MMM")}. A bientot :)`,
             };
             sendSMS(inputSMS)
                 .then((response) => console.log('SMS Sent:', response))
-                .catch((error) => console.error('Error:', error)); */
+                .catch((error) => console.error('Error:', error)); 
         }
         revalidatePath(`/rsvp/${code}/${id}`)
         return attendee
