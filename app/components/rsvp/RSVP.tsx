@@ -127,7 +127,7 @@ function RSVP({ id, attendee, code, audio_url, counters }: { id: string, attende
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "absolute", zIndex: -1, width: "100vw", height: "100vh" }}>
                 <Loading />
             </div>
-            <div ref={componentRef} style={{ display: isOpenForm ? "block" : "none", zIndex: 2, position: "absolute", backgroundColor: "rgba(0,0,0,0.8)" }}>
+            <div ref={componentRef} style={{ display: isOpenForm ? "block" : "none", zIndex: 3, position: "absolute", backgroundColor: "rgba(0,0,0,0.8)" }}>
                 <FormAdd id={id} code={code} onFormSubmit={handleFormSubmit} attendee={attendee} />
             </div>
             {audio_url &&
@@ -149,7 +149,7 @@ function RSVP({ id, attendee, code, audio_url, counters }: { id: string, attende
                 </div> :
                     <>
 
-                        {showRSVP && <div style={{ position: "sticky", zIndex: 3, right: 0, top: 20, paddingRight: 10, display: "flex", flexDirection: "column", alignItems: "end" }}>
+                        {showRSVP && <div style={{ position: "sticky", zIndex: 4, right: 0, top: 20, paddingRight: 10, display: "flex", flexDirection: "column", alignItems: "end" }}>
                             <div onClick={toggle} className={styles.btn_rsvp} > {!isOpenForm ? "RSVP" : "Retour"} </div>
                             <ClickHere />
 
@@ -157,7 +157,7 @@ function RSVP({ id, attendee, code, audio_url, counters }: { id: string, attende
                     </>
 
             }
-            <div style={{ position: "absolute", zIndex: 3, left: 0, top: 0, paddingLeft: 10, display: "flex", flexDirection: "row", gap: "15px" }}>
+            <div style={{ position: "absolute", zIndex: 2, left: 0, top: 0, paddingLeft: 10, display: "flex", flexDirection: "row", gap: "15px" }}>
                 {counters.map((c, k) => (
                     <CounterSVG key={k} {...c} max={32} />
                 ))}

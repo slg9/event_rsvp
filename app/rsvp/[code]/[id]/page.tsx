@@ -46,3 +46,4 @@ export default async function Home({ params, searchParams }: { params: { code: s
     </div>)
 }
 
+export const revalidate = 10; 
