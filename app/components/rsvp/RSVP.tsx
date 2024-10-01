@@ -17,7 +17,7 @@ import { NightOccupancy } from '@/app/utils/utils'
 
 
 
-function RSVP({ id, attendee, code, audio_url,counters }: { id: string, attendee: Attendee | undefined, code: string, audio_url?: string,counters:NightOccupancy[] }) {
+function RSVP({ id, attendee, code, audio_url, counters }: { id: string, attendee: Attendee | undefined, code: string, audio_url?: string, counters: NightOccupancy[] }) {
     const [isOpenForm, setOpenForm] = useState(false)
     const [showRSVP, setShowRSVP] = useState(false)
     const componentRef = useRef<HTMLDivElement>(null);
@@ -26,7 +26,7 @@ function RSVP({ id, attendee, code, audio_url,counters }: { id: string, attendee
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
-   
+
 
     const router = useRouter()
 
@@ -112,13 +112,14 @@ function RSVP({ id, attendee, code, audio_url,counters }: { id: string, attendee
         }
     }, [showCard]);
 
-    let delay: number = parseInt(process.env.NEXT_PUBLIC_DELAY_TRANSITON || "2") * 1000
     useEffect(() => {
+        let delay: number = attendee ? 0 : parseInt(process.env.NEXT_PUBLIC_DELAY_TRANSITON || "2") * 1000
+
         showCard && setTimeout(() => {
             console.log(process.env.NEXT_PUBLIC_DELAY_TRANSITON)
             setShowRSVP(true)
         }, delay)
-    }, [showCard, delay])
+    }, [showCard, attendee])
 
 
     return (
