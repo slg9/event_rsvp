@@ -31,28 +31,51 @@ interface SummaryData {
     soloAdults: number;
     coupleAdults: number;
     familyAdults: number;
+    Total:number;
 }
 
 export async function SendRecap(event_id: string) {
     const attendees = await ListAttendees(undefined, event_id);
 
+    // Define night periods for room counts (from 11 to 12 and from 12 to 13)
+    const nights = [
+        { night: '2024-10-11/2024-10-12', displayDate: '11 au 12' },
+        { night: '2024-10-12/2024-10-13', displayDate: '12 au 13' }
+    ];
+
+    // Define days for dinner counts (11, 12, and 13 October)
     const dates = ['2024-10-11', '2024-10-12', '2024-10-13'];
 
     // Initialize summary and dinner data
     const summaryData: { [key: string]: SummaryData } = {};
     const dinnerData: { [key: string]: number } = {};
 
-    dates.forEach(date => {
-        summaryData[date] = {
+    nights.forEach(({ night }) => {
+        summaryData[night] = {
             solo: 0,
             couples: 0,
             families: 0,
             soloAdults: 0,
             coupleAdults: 0,
-            familyAdults: 0
+            familyAdults: 0,
+            Total:0
         };
+    });
+
+    dates.forEach(date => {
         dinnerData[date] = 0;
     });
+
+    // Helper to check if an attendee stays during the night period
+    function staysDuringNight(nightStart: string, nightEnd: string, arrival: string, departure: string): boolean {
+        const nightStartDate = moment(nightStart, 'YYYY-MM-DD');
+        const nightEndDate = moment(nightEnd, 'YYYY-MM-DD');
+        const arrivalDate = moment(arrival, 'YYYY-MM-DD');
+        const departureDate = moment(departure, 'YYYY-MM-DD');
+
+        return nightStartDate.isBetween(arrivalDate, departureDate, undefined, '[]') &&
+               nightEndDate.isBetween(arrivalDate, departureDate, undefined, '[]');
+    }
 
     // Helper to check if a date is within the range [arrival, departure]
     function isWithinDateRange(date: string, arrival: string, departure: string): boolean {
@@ -68,23 +91,30 @@ export async function SendRecap(event_id: string) {
     attendees.forEach(attendee => {
         const { arrival, departure, adults, attending } = attendee;
 
-        // Loop over the dates to update summary and dinner data for the range
+        // Check for attendance and stay during each night
         if (attending === "oui") {
+            nights.forEach(({ night }) => {
+                const [nightStart, nightEnd] = night.split('/');
+                if (arrival && departure && adults && staysDuringNight(nightStart, nightEnd, arrival, departure)) {
+                    // Update room summary and aggregate adult numbers for each night
+                    if (adults === 1) {
+                        summaryData[night].solo++;
+                        summaryData[night].soloAdults += adults;
+                    } else if (adults === 2) {
+                        summaryData[night].couples++;
+                        summaryData[night].coupleAdults += adults;
+                    } else {
+                        summaryData[night].families++;
+                        summaryData[night].familyAdults += adults;
+                    }
+                    summaryData[night].Total += adults;
+
+                }
+            });
+
+            // Update dinner count by day
             dates.forEach(date => {
                 if (arrival && departure && adults && isWithinDateRange(date, arrival, departure)) {
-                    // Update room summary and aggregate adult numbers
-                    if (adults === 1) {
-                        summaryData[date].solo++;
-                        summaryData[date].soloAdults += adults;
-                    } else if (adults === 2) {
-                        summaryData[date].couples++;
-                        summaryData[date].coupleAdults += adults;
-                    } else {
-                        summaryData[date].families++;
-                        summaryData[date].familyAdults += adults;
-                    }
-
-                    // Update dinner count
                     dinnerData[date] += adults;
                 }
             });
@@ -121,38 +151,40 @@ export async function SendRecap(event_id: string) {
         font-weight: bold;
     `;
 
-    // Generate the room summary table with actual adult numbers in brackets
+    // Generate the room summary table with actual adult numbers for each night
     let summaryTableHTML = `
-        <h2 style="${headerStyle}">Partage des Chambres la nuits</h2>
+        <h2 style="${headerStyle}">Partage des Chambres par Nuit</h2>
         <table style="${tableStyle}">
             <thead>
                 <tr>
-                    <th style="${thStyle}">Date</th>
+                    <th style="${thStyle}">Nuit</th>
                     <th style="${thStyle}">Invité Solo[nb adultes]</th>
                     <th style="${thStyle}">Couples[nb adultes]</th>
                     <th style="${thStyle}">Familles (+2 ads)[nb adultes]</th>
+                    <th style="${thStyle}">Total Adultes</th>
                 </tr>
             </thead>
             <tbody>
     `;
 
-    dates.forEach(date => {
-        const { solo, couples, families, soloAdults, coupleAdults, familyAdults } = summaryData[date];
+    nights.forEach(({ night, displayDate }) => {
+        const { solo, couples, families, soloAdults, coupleAdults, familyAdults ,Total} = summaryData[night];
         summaryTableHTML += `
             <tr>
-                <td style="${tdStyle}">${moment(date).format("DD")} Octobre</td>
+                <td style="${tdStyle}">Nuit du ${displayDate} Octobre</td>
                 <td style="${tdStyle}">${solo} [${soloAdults}]</td>
                 <td style="${tdStyle}">${couples} [${coupleAdults}]</td>
                 <td style="${tdStyle}">${families} [${familyAdults}]</td>
+                <td style="${tdStyle}">${Total}</td>
             </tr>
         `;
     });
 
     summaryTableHTML += `</tbody></table>`;
 
-    // Generate the dinner guests table with inline CSS
+    // Generate the dinner guests table for each day
     let dinnerTableHTML = `
-        <h2 style="${headerStyle}">Personnes qui mangent par jour</h2>
+        <h2 style="${headerStyle}">Personnes qui mangent par Jour</h2>
         <table style="${tableStyle}">
             <thead>
                 <tr>
@@ -175,9 +207,9 @@ export async function SendRecap(event_id: string) {
 
     dinnerTableHTML += `</tbody></table>`;
 
-    // Generate the individual attendee details table with stay period (Séjour du à)
+    // Generate the attendee details table with stay period (Séjour du à)
     let attendeeTableHTML = `
-        <h2 style="${headerStyle}"> Details des invites</h2>
+        <h2 style="${headerStyle}"> Détails des invités</h2>
         <table style="${tableStyle}">
             <thead>
                 <tr>
@@ -225,6 +257,7 @@ export async function SendRecap(event_id: string) {
             .catch((error) => console.error('Error:', error));
     }
 }
+
 
 
 
