@@ -117,7 +117,7 @@ function RSVP({ id, attendee, code, audio_url, counters }: { id: string, attende
 
         showCard && setTimeout(() => {
             console.log(process.env.NEXT_PUBLIC_DELAY_TRANSITON)
-            setShowRSVP(true)
+            //setShowRSVP(true)
         }, delay)
     }, [showCard, attendee])
 
